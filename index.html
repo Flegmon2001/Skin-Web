@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Minecraft Skin Viewer</title>
+</head>
+<body>
+
+<h2>Minecraft Skin Viewer</h2>
+
+<input type="text" id="username" placeholder="Enter username">
+<button onclick="loadSkin()">Show Skin</button>
+
+<canvas id="skin_container" width="300" height="400"></canvas>
+
+<script type="module">
+import * as skinview3d from "https://unpkg.com/skinview3d";
+
+let viewer = new skinview3d.SkinViewer({
+    canvas: document.getElementById("skin_container"),
+    width: 300,
+    height: 400,
+});
+
+viewer.controls.enableRotate = true;
+
+window.loadSkin = async function() {
+    const name = document.getElementById("username").value;
+
+    // Uses a public API to get the skin
+    viewer.loadSkin(`https://mineskin.eu/skin/${name}`);
+}
+</script>
+
+</body>
+</html>
