@@ -13,31 +13,6 @@ body {
     text-align: center;
 }
 
-h1 {
-    margin-top: 20px;
-}
-
-input {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: none;
-}
-
-button {
-    padding: 10px 15px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    background: #4CAF50;
-    color: white;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #45a049;
-}
-
 #viewer {
     margin: 20px auto;
     width: 400px;
@@ -52,13 +27,13 @@ button:hover {
 
 <h1>Minecraft Skin Viewer</h1>
 
-<input id="username" placeholder="Enter Minecraft username">
+<input id="username" placeholder="Enter username">
 <button onclick="loadSkin()">Load Skin</button>
 
 <div id="viewer"></div>
 
 <script type="module">
-import * as skinview3d from "https://unpkg.com/skinview3d";
+import * as skinview3d from "https://unpkg.com/skinview3d?module";
 
 const viewer = new skinview3d.SkinViewer({
     canvas: document.createElement("canvas"),
@@ -68,28 +43,36 @@ const viewer = new skinview3d.SkinViewer({
 
 document.getElementById("viewer").appendChild(viewer.canvas);
 
-// 🎮 Camera settings (like Minecraft view)
+// Better lighting (THIS FIXES "invisible skin")
+viewer.lights.addAmbientLight(0xffffff, 0.8);
+viewer.lights.addDirectionalLight(0xffffff, 0.8);
+
+// Camera position
 viewer.camera.position.set(0, 1.5, 3);
 
-// 💡 Lighting (important for realism)
-viewer.scene.add(new skinview3d.createLight(0xffffff, 1));
-viewer.scene.add(new skinview3d.createLight(0xffffff, 0.5));
-
-// 🌀 Controls (mouse rotate)
+// Controls
 viewer.controls.enableRotate = true;
 viewer.controls.enableZoom = true;
-viewer.controls.enablePan = false;
 
-// 👣 Animation (makes it feel alive)
-let animation = new skinview3d.IdleAnimation();
-viewer.animation = animation;
+// Animation
+viewer.animation = new skinview3d.IdleAnimation();
 
-window.loadSkin = function () {
+// ✅ FIXED SKIN LOADING
+window.loadSkin = async function () {
     const name = document.getElementById("username").value;
 
-    // Loads real skin from API
-    viewer.loadSkin(`https://mineskin.eu/skin/${name}`);
-    viewer.loadCape(`https://mineskin.eu/cape/${name}`);
+    if (!name) return;
+
+    try {
+        // Use mc-heads (more reliable)
+        const skinUrl = `https://mc-heads.net/skin/${name}`;
+
+        await viewer.loadSkin(skinUrl);
+
+    } catch (e) {
+        alert("Skin not found or error loading!");
+        console.error(e);
+    }
 };
 </script>
 
