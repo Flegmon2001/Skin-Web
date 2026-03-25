@@ -1,64 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Minecraft Skin Viewer</title>
+    <meta charset="UTF-8">
+    <title>Minecraft Skin Viewer</title>
 
-<style rel="stylesheet" link="style.css">
+    <style rel="stylesheet" link="style.css">
 </head>
 
 <body>
 
-<h1>Minecraft Skin Viewer</h1>
+    <h1>Minecraft Skin Viewer</h1>
 
-<input id="username" placeholder="Enter username">
-<button onclick="loadSkin()">Load Skin</button>
+    <input id="username" placeholder="Enter username">
+    <button onclick="loadSkin()">Load Skin</button>
 
-<div id="viewer"></div>
+    <div id="viewer"></div>
 
-<script type="module">
-import * as skinview3d from "https://unpkg.com/skinview3d?module";
-
-const viewer = new skinview3d.SkinViewer({
-    canvas: document.createElement("canvas"),
-    width: 400,
-    height: 500,
-});
-
-document.getElementById("viewer").appendChild(viewer.canvas);
-
-// Better lighting (THIS FIXES "invisible skin")
-viewer.lights.addAmbientLight(0xffffff, 0.8);
-viewer.lights.addDirectionalLight(0xffffff, 0.8);
-
-// Camera position
-viewer.camera.position.set(0, 1.5, 3);
-
-// Controls
-viewer.controls.enableRotate = true;
-viewer.controls.enableZoom = true;
-
-// Animation
-viewer.animation = new skinview3d.IdleAnimation();
-
-// ✅ FIXED SKIN LOADING
-window.loadSkin = async function () {
-    const name = document.getElementById("username").value;
-
-    if (!name) return;
-
-    try {
-        // Use mc-heads (more reliable)
-        const skinUrl = `https://mc-heads.net/skin/${name}`;
-
-        await viewer.loadSkin(skinUrl);
-
-    } catch (e) {
-        alert("Skin not found or error loading!");
-        console.error(e);
-    }
-};
-</script>
+    <script type="module">
+    import * as skinview3d from "https://unpkg.com/skinview3d?module";
+    
+    const viewer = new skinview3d.SkinViewer({
+        canvas: document.createElement("canvas"),
+        width: 400,
+        height: 500,
+    });
+    
+    document.getElementById("viewer").appendChild(viewer.canvas);
+    
+    // Better lighting (THIS FIXES "invisible skin")
+    viewer.lights.addAmbientLight(0xffffff, 0.8);
+    viewer.lights.addDirectionalLight(0xffffff, 0.8);
+    
+    // Camera position
+    viewer.camera.position.set(0, 1.5, 3);
+    
+    // Controls
+    viewer.controls.enableRotate = true;
+    viewer.controls.enableZoom = true;
+    
+    // Animation
+    viewer.animation = new skinview3d.IdleAnimation();
+    
+    // ✅ FIXED SKIN LOADING
+    window.loadSkin = async function () {
+        const name = document.getElementById("username").value;
+    
+        if (!name) return;
+    
+        try {
+            // Use mc-heads (more reliable)
+            const skinUrl = `https://mc-heads.net/skin/${name}`;
+    
+            await viewer.loadSkin(skinUrl);
+    
+        } catch (e) {
+            alert("Skin not found or error loading!");
+            console.error(e);
+        }
+    };
+    </script>
 
 </body>
 </html>
